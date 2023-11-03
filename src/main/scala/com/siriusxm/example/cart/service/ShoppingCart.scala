@@ -22,16 +22,21 @@ object ShoppingCart {
     Ref.of[F, Map[ProductName, Quantity]](Map.empty).map { ref =>
       new ShoppingCart[F] {
 
-        // TODO check if the product exists
         def add(
           productName: ProductName,
           quantity: Quantity
-        ): F[Unit] =
-          ref.update(
-            _.updatedWith(productName) {
-              case Some(currentQuantity) => (currentQuantity |+| quantity).some
-              case None => quantity.some
-            })
+        ): F[Unit] = {
+          def checkProduct() = products.getByName(productName).void
+
+          def updateCart() =
+            ref.update(
+              _.updatedWith(productName) {
+                case Some(currentQuantity) => (currentQuantity |+| quantity).some
+                case None => quantity.some
+              })
+
+          checkProduct *> updateCart
+        }
 
         def calculateTotal: F[CartTotal] =
           getItems.map { items =>

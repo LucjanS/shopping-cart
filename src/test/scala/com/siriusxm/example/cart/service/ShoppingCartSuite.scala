@@ -42,6 +42,15 @@ class ShoppingCartSuite extends CatsEffectSuite {
     }
   }
 
+  test("Adding products fails if product doesn't exists") {
+    for {
+      cart <- ShoppingCart.make[IO](new TestProducts(Nil))
+      result <- cart.add(cornflakes.name, Quantity(2)).attempt
+      expected = ProductNotFound(cornflakes.name).asLeft
+    } yield {
+      assertEquals(result, expected)
+    }
+  }
 
 }
 
