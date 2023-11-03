@@ -11,6 +11,12 @@ lazy val root = (project in file(".")).settings(
     "org.typelevel" %% "cats-effect-kernel" % "3.3.12",
     // standard "effect" library (Queues, Console, Random etc.)
     "org.typelevel" %% "cats-effect-std" % "3.3.12",
+    // HTTP client
+    "org.http4s" %% "http4s-ember-client" % "0.23.23",
+    "org.http4s" %% "http4s-circe" % "0.23.23",
+    // JSON library
+    "io.circe" %% "circe-generic" % "0.14.1",
+    "io.circe" %% "circe-generic-extras" % "0.14.1",
     // better monadic for compiler plugin as suggested by documentation
     compilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1"),
     "org.typelevel" %% "munit-cats-effect-3" % "1.0.7" % Test
