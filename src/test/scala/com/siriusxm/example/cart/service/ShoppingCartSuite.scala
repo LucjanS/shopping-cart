@@ -9,21 +9,18 @@ import munit.CatsEffectSuite
 
 class ShoppingCartSuite extends CatsEffectSuite {
 
-  val cornflakesName = ProductName("cornflakes")
-  val weetabixName = ProductName("weetabix")
-
-  val cornflakes = Product(cornflakesName, ProductTitle("Corn Flakes"), Money(2.52))
-  val weetabix = Product(weetabixName, ProductTitle("Weetabix"), Money(9.98))
+  val cornflakes = Product(ProductName("cornflakes"), ProductTitle("Corn Flakes"), Money(2.52))
+  val weetabix = Product(ProductName("weetabix"), ProductTitle("Weetabix"), Money(9.98))
 
   test("Adding products") {
     val products = new TestProducts(cornflakes :: weetabix :: Nil)
 
     for {
       cart <- ShoppingCart.make[IO](products)
-      _ <- cart.add(cornflakesName, Quantity(2))
-      _ <- cart.add(weetabixName, Quantity(1))
-      _ <- cart.add(cornflakesName, Quantity(3))
-      _ <- cart.add(weetabixName, Quantity(1))
+      _ <- cart.add(cornflakes.name, Quantity(2))
+      _ <- cart.add(weetabix.name, Quantity(1))
+      _ <- cart.add(cornflakes.name, Quantity(3))
+      _ <- cart.add(weetabix.name, Quantity(1))
       obtained <- cart.getItems
     } yield {
       val expected = CartItem(cornflakes, Quantity(5)) :: CartItem(weetabix, Quantity(2)) :: Nil
@@ -36,8 +33,8 @@ class ShoppingCartSuite extends CatsEffectSuite {
 
     for {
       cart <- ShoppingCart.make[IO](products)
-      _ <- cart.add(cornflakesName, Quantity(2))
-      _ <- cart.add(weetabixName, Quantity(1))
+      _ <- cart.add(cornflakes.name, Quantity(2))
+      _ <- cart.add(weetabix.name, Quantity(1))
       actual <- cart.calculateTotal
       expected = CartTotal(subTotal = Money(15.02), tax = Money(1.88), total = Money(16.90))
     } yield {

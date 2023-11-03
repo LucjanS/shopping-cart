@@ -21,6 +21,8 @@ object ShoppingCart {
   ): F[ShoppingCart[F]] = {
     Ref.of[F, Map[ProductName, Quantity]](Map.empty).map { ref =>
       new ShoppingCart[F] {
+
+        // TODO check if the product exists
         def add(
           productName: ProductName,
           quantity: Quantity

@@ -2,7 +2,7 @@ package com.siriusxm.example.cart.domain
 
 import com.siriusxm.example.cart.domain.Product.{ProductName, ProductTitle}
 import io.circe.generic.extras.semiauto.deriveUnwrappedCodec
-import io.circe.{Codec, Decoder}
+import io.circe._
 
 
 case class ProductResponse(
@@ -11,6 +11,12 @@ case class ProductResponse(
 )
 
 object ProductResponse {
+  implicit val jsonEncoder: Encoder[ProductResponse] =
+    Encoder.forProduct2(
+      "title",
+      "price"
+    ) { p => (p.title, p.price) }
+
   implicit val jsonDecoder: Decoder[ProductResponse] =
     Decoder.forProduct2(
       "title",
